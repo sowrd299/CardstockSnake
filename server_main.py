@@ -1,16 +1,9 @@
-from connection import ServerAcceptConnection
+from server import GameServer
 
 def main():
 
-    con = ServerAcceptConnection()
-    client_con = con.accept_client()
-
-    while True:
-
-        msg = client_con.recieve()
-        if msg:
-            print(msg)
-            break
+    s = GameServer()
+    s.accept_player()
 
 if __name__ == "__main__":
     main()

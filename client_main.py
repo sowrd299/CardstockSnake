@@ -4,7 +4,13 @@ def main():
     
     con = Connection()
     con.connect("127.0.0.1")
-    con.send("This is a test message")
+
+    while True:
+
+        msg = con.recieve()
+        if msg:
+            print(msg)
+            break
 
 if __name__ == "__main__":
     main()

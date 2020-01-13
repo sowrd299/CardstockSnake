@@ -1,14 +1,15 @@
 import socket
+from message import Message
 
-PORT = 5006
 
 '''
 A superclass for socket connections.
 '''
 class Connection():
 
-    terminator = "</msg>"
+    terminator = "</{0}>".format(Message.root_name)
     encoding = "utf-8"
+    port = 5006
 
     def __init__(self, sock = None):
 
@@ -16,17 +17,17 @@ class Connection():
         self.in_buffer = ""
 
     def connect(self, host):
-        self.socket.connect((host, PORT))
+        self.socket.connect((host, self.port))
 
     '''
     Sends the given string allong the connection.
     Assumes the message does not contain the terminator sequence.
     '''
-    def send(self, msg : str):
-        total_msg = msg + self.terminator
+    def send(self, msg : Message):
+        total_msg = msg.to_bytes(self.encoding)
         total_sent = 0
         while total_sent < len(total_msg):
-            sent = self.socket.send(bytes(total_msg[total_sent:], self.encoding))
+            sent = self.socket.send(total_msg[total_sent:])
             if sent == 0:
                 raise RuntimeError("socket connection broken (found on send)")
             total_sent += sent
@@ -60,7 +61,7 @@ class Connection():
     '''
     def recieve(self):
         self.recieve_data()
-        return self.recieve_msg()
+        return Message.from_str(self.recieve_msg())
 
 '''
 A class for connecting the server to accept connections with.
@@ -72,7 +73,7 @@ class ServerAcceptConnection(Connection):
     def __init__(self):
 
         super().__init__()
-        self.socket.bind(('', PORT))
+        self.socket.bind(('', self.port))
         self.socket.listen(self.max_clients)
 
     '''
