@@ -63,6 +63,12 @@ class Connection():
         self.recieve_data()
         return Message.from_str(self.recieve_msg())
 
+    '''
+    Closes the connection.
+    '''
+    def close(self):
+        self.socket.close()
+
 '''
 A class for connecting the server to accept connections with.
 '''

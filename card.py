@@ -8,8 +8,8 @@ class Card():
     '''
     Takes the cards unique identifier.
     '''
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, i):
+        self.id = i
 
     '''
     Returns the unique identifier of the card.
