@@ -37,6 +37,7 @@ class GameClient(GameConnectionManager):
             type = "card_played",
             by = self.id,
             card = card.id,
+            play_specs = play_specs,
             next_player = self.id if keep_priority else self.next_id
         )
 
@@ -49,6 +50,7 @@ class GameClient(GameConnectionManager):
         msg = self.con.recieve()
         if msg:
             self.handle(msg)
+            return (self.card_loader.get_card(msg.get("card")), msg.get("play_specs"))
 
     '''
     Returns wether or not this player has priority.
